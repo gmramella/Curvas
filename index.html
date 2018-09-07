@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<script src="curves.js"></script>
+<script src="draw.js"></script>
+<script src="utils.js"></script>
+<body>
+<script>
+	var width = 800;
+	var height = 600;
+	var fps = 64;
+	var dt = (1/fps);
+	
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svg.setAttribute("width", width);
+	svg.setAttribute("height", height);
+	document.body.appendChild(svg);
+	
+	var radius = 2;
+	var black = {r: 0, g: 0, b: 0};
+	var red = {r: 255, g: 0, b: 0};
+	var green = {r: 0, g: 255, b: 0};
+	var alpha = 1;
+	var center = {x: width/2, y: height/2, z: 0};
+	
+	var scale = 20;
+	//--------------------------------------------------------------------------------------------------------------
+	var position = {x: center.x, y: center.y, z: center.z};
+	//var circle = createCircle("circle", center, radius, black, alpha);
+	//var lineAcc = createLine("lineAcc", position, position, radius, red, alpha);
+	//var lineCro = createLine("lineCro", position, position, radius, green, alpha);
+	//--------------------------------------------------------------------------------------------------------------
+	var t = 0;
+	var func = butterflyCurve;
+	var type = "parametric";
+	var particle;
+	switch (type) {
+		case "parametric":
+			particle = createCircle("particle", {x: center.x+scale*func(t).x, y: center.y-scale*func(t).y}, radius, black, alpha);
+			break;
+		case "polar":
+			particle = createCircle("particle", {x: center.x+scale*func(t).r*Math.cos(t), y: center.y-scale*func(t).r*Math.sin(t)}, radius, black, alpha);
+			break;
+		case "explicit":
+			particle = createCircle("particle", {x: center.x+scale*func(t).x, y: center.y-scale*func(t).y}, radius, black, alpha);
+			break;
+		case "twoCurves":
+			particle = createCircle("particle1", {x: center.x+scale*func(t).x1, y: center.y-scale*func(t).y1}, radius, black, alpha);
+			particle = createCircle("particle2", {x: center.x+scale*func(t).x2, y: center.y-scale*func(t).y2}, radius, black, alpha);
+			break;
+		case "twoPolars":
+			particle = createCircle("particle1", {x: center.x+scale*func(t).r1*Math.cos(t), y: center.y-scale*func(t).r1*Math.sin(t)}, radius, black, alpha);
+			particle = createCircle("particle2", {x: center.x+scale*func(t).r2*Math.cos(t), y: center.y-scale*func(t).r2*Math.sin(t)}, radius, black, alpha);
+			break;
+		case "fourCurves":
+			particle = createCircle("particle1", {x: center.x+scale*func(t).x1, y: center.y-scale*func(t).y1}, radius, black, alpha);
+			particle = createCircle("particle2", {x: center.x+scale*func(t).x2, y: center.y-scale*func(t).y2}, radius, black, alpha);
+			particle = createCircle("particle3", {x: center.x+scale*func(-t).x1, y: center.y-scale*func(-t).y1}, radius, black, alpha);
+			particle = createCircle("particle4", {x: center.x+scale*func(-t).x2, y: center.y-scale*func(-t).y2}, radius, black, alpha);
+			break;
+	}
+	
+	var interval = setInterval(function(){
+		//--------------------------------------------------------------------------------------------------------------
+		//position = {x: center.x+X(t), y: center.y-Y(t), z: center.z+Z(t)};
+		//var theta = Math.atan2(slope(Y, t), slope(X, t));
+		//var ro = Math.sqrt(X(t) * X(t) + Y(t) * Y(t) + Z(t) * Z(t));
+		//var phi = Math.atan2(slope(Z, t), slope(X, t));
+		//var dir = {x: Math.sin(phi) * Math.cos(theta), y: Math.sin(phi) * Math.sin(theta), z: Math.cos(phi)};
+		//var cro = cross2d(dir);
+		//updateCircle("circle", position, radius, black, alpha);
+		//updateLine("lineAcc", position, {x: position.x + dir.x * ro, y: position.y - dir.y * ro, z: position.z + dir.z * ro}, radius, red, alpha);
+		//updateLine("lineCro", position, {x: position.x + cro.x * ro, y: position.y - cro.y * ro, z: position.z + cro.z * ro}, radius, green, alpha);
+		//--------------------------------------------------------------------------------------------------------------
+		switch (type) {
+			case "parametric":
+				particle = createCircle("particle", {x: center.x+scale*func(t).x, y: center.y-scale*func(t).y}, radius, black, alpha);
+				break;
+			case "polar":
+				particle = createCircle("particle", {x: center.x+scale*func(t).r*Math.cos(t), y: center.y-scale*func(t).r*Math.sin(t)}, radius, black, alpha);
+				break;
+			case "explicit":
+				particle = createCircle("particle", {x: center.x+scale*func(t).x, y: center.y-scale*func(t).y}, radius, black, alpha);
+				break;
+			case "twoCurves":
+				particle = createCircle("particle1", {x: center.x+scale*func(t).x1, y: center.y-scale*func(t).y1}, radius, black, alpha);
+				particle = createCircle("particle2", {x: center.x+scale*func(t).x2, y: center.y-scale*func(t).y2}, radius, black, alpha);
+				break;
+			case "twoPolars":
+				particle = createCircle("particle1", {x: center.x+scale*func(t).r1*Math.cos(t), y: center.y-scale*func(t).r1*Math.sin(t)}, radius, black, alpha);
+				particle = createCircle("particle2", {x: center.x+scale*func(t).r2*Math.cos(t), y: center.y-scale*func(t).r2*Math.sin(t)}, radius, black, alpha);
+				break;
+			case "fourCurves":
+				particle = createCircle("particle1", {x: center.x+scale*func(t).x1, y: center.y-scale*func(t).y1}, radius, black, alpha);
+				particle = createCircle("particle2", {x: center.x+scale*func(t).x2, y: center.y-scale*func(t).y2}, radius, black, alpha);
+				particle = createCircle("particle3", {x: center.x+scale*func(-t).x1, y: center.y-scale*func(-t).y1}, radius, black, alpha);
+				particle = createCircle("particle4", {x: center.x+scale*func(-t).x2, y: center.y-scale*func(-t).y2}, radius, black, alpha);
+				break;
+		}
+		t+=dt;
+	}, 1000 * dt);
+</script>
+</body>
+</html>
